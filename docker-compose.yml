@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres-account:
+    image: postgres:16
+    container_name: account-db
+    environment:
+      POSTGRES_DB: accountdb
+      POSTGRES_USER: revolut
+      POSTGRES_PASSWORD: secret
+    ports:
+       - "5433:5432"
+    volumes:
+      - pg_account_data:/var/lib/postgresql/data
+    networks:
+      - revolut-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres-account
+    networks:
+      - revolut-net
+
+volumes:
+  pg_account_data:
+
+networks:
+  revolut-net:
